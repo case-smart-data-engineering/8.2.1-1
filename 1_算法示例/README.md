@@ -1,14 +1,23 @@
 # BERT-BiLSTM-CRF模型
 
 ### 文件清单
-- data：数据集
+- data\clue：数据集
 - model：模型参数、保存训练后的模型、模型输入所需的文件
 - pretrained_bert_model: bert模型存放路径
 - clue_process.py：数据处理文件
 - conlleval.py：模型评估代码
 - models.py：BERT+BiLstm+CRF模型
-- ner.py：运行入口
+- solution.py：运行入口
 - utils.py：工具文件
+
+### 采用的中文bert模型
+bert-base-chinese
+- 对于大模型网络的运行，建议下载到本地进行
+
+### 模型下载之后
+1. 把solution文件中base_path的修改成本地路径
+2. 先运行do_trian之后会生成模型bin文件，之后再进行验证和测试
+
 
 ### 运行的环境
 ```
@@ -21,6 +30,7 @@ pytorch-transformers == 1.2.0
 
 运行`clue_process.py`文件对数据集进行处理
 把数据从json文件处理成BIO格式，保存在txt同名文件
+```
 
 ```
 彭	B-name
@@ -50,8 +60,9 @@ pytorch-transformers == 1.2.0
 于	O
 ```
 
+预测结果保存在model\clue_bilstm\token_labels_.txt中，第一列为输入的BIO格式，第二列是预测的实体类型
         
-```
+
 ### 使用方法
 ```
 BERT_BASE_DIR=bert-base-chinese
