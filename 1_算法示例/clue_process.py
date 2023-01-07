@@ -1,7 +1,6 @@
 import json
 import sys
 import os
-# sys.path.append('D:\GitHub\BERT-BiLSTM-CRF-NER-pytorch\\1_算法示例')
 
 def _read_json(input_file, mode="train"):
     lines = []
@@ -25,7 +24,7 @@ def _read_json(input_file, mode="train"):
             lines.append({"words": words, "labels": labels})
     
 
-    with open(f"d:\\GitHub\\BERT-BiLSTM-CRF-NER-pytorch\\1_算法示例\data\clue\{mode}.txt", "w", encoding='utf-8') as f:
+    with open(f"./1_算法示例/data/clue/{mode}.txt", "w", encoding='utf-8') as f:
         for line in lines:
             for w, l in zip(line["words"], line["labels"]):
                 f.write(f"{w}\t{l}\n")
@@ -73,10 +72,10 @@ def get_entity_bio(seq):
     return chunks
 
 if __name__ == "__main__":
-    file_path = 'd:\\GitHub\\BERT-BiLSTM-CRF-NER-pytorch\\1_算法示例\data\clue'
-    train_file = file_path+'\\train.json'
-    eval_file = file_path+'\eval.json'
-    test_file = file_path+'\\test.json'
+    file_path = './1_算法示例/data/clue'
+    train_file = file_path+'/train.json'
+    eval_file = file_path+'/eval.json'
+    test_file = file_path+'/test.json'
 
     _read_json(train_file, "train")
     _read_json(eval_file, "eval")

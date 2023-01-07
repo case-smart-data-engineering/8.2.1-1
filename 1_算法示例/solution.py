@@ -97,12 +97,12 @@ def solution():
     parser = argparse.ArgumentParser()
 
     ## Required parameters
-    base_path = 'd:\\GitHub\\BERT-BiLSTM-CRF-NER-pytorch\\1_算法示例'
-    parser.add_argument("--train_file", default=base_path +'\data\clue\\train.txt', type=str)
-    parser.add_argument("--eval_file", default=base_path +'\data\clue\\eval.txt', type=str)
-    parser.add_argument("--test_file", default=base_path +'\data\clue\\test.txt', type=str)
-    parser.add_argument("--model_name_or_path", default=base_path+'\pretrained_bert_model\\bert-base-chinese', type=str)
-    parser.add_argument("--output_dir", default=base_path+'\model\clue_bilstm', type=str)
+    base_path = './1_算法示例'
+    parser.add_argument("--train_file", default=base_path +'/data/clue/train.txt', type=str)
+    parser.add_argument("--eval_file", default=base_path +'/data/clue/eval.txt', type=str)
+    parser.add_argument("--test_file", default=base_path +'/data/clue/test.txt', type=str)
+    parser.add_argument("--model_name_or_path", default=base_path+'/pretrained_bert_model/bert-base-chinese', type=str)
+    parser.add_argument("--output_dir", default=base_path+'/model/clue_bilstm', type=str)
 
     ## other parameters
     parser.add_argument("--config_name", default="", type=str,
@@ -159,12 +159,6 @@ def solution():
     if args.gradient_accumulation_steps < 1:
         raise ValueError("Invalid gradient_accumulation_steps parameter: {}, should be >= 1".format(
                             args.gradient_accumulation_steps))
-
-    # now_time = datetime.datetime.now().strftime('%Y-%m-%d_%H')
-    # tmp_dir = args.output_dir + '/' +str(now_time) + '_ernie'
-    # if not os.path.exists(tmp_dir):
-    #     os.makedirs(tmp_dir)
-    # args.output_dir = tmp_dir
 
 
 
