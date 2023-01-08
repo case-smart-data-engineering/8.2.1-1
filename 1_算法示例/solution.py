@@ -102,7 +102,7 @@ def solution():
     parser.add_argument("--eval_file", default=base_path +'/data/clue/eval.txt', type=str)
     parser.add_argument("--test_file", default=base_path +'/data/clue/test.txt', type=str)
     parser.add_argument("--model_name_or_path", default=base_path+'/pretrained_bert_model/bert-base-chinese', type=str)
-    parser.add_argument("--output_dir", default=base_path+'/model/clue_bilstm', type=str)
+    parser.add_argument("--output_dir", default='./1_算法示例/model/clue_bilstm/', type=str)
 
     ## other parameters
     parser.add_argument("--config_name", default="", type=str,
@@ -113,7 +113,6 @@ def solution():
                         help="Where do you want to store the pre-trained models downloaded from s3")
     
     parser.add_argument("--max_seq_length", default=256, type=int)
-    # parser.add_argument("--do_train", default=False, type=boolean_string) # 如果训练后，则可以不用训练，直接验证和测试
     parser.add_argument("--do_train", default=True, type=boolean_string)
     parser.add_argument("--do_eval", default=True, type=boolean_string)
     parser.add_argument("--do_test", default=True, type=boolean_string)
@@ -141,10 +140,12 @@ def solution():
 
     args = parser.parse_args()
 
-    if torch.cuda.is_available():
-        device = torch.device("cuda")
-    else:
-        device = torch.device("cpu")
+    # if torch.cuda.is_available():
+    #     device = torch.device("cuda")
+    # else:
+    #     device = torch.device("cpu")
+    # 若使用gpu，注意gpu显存大小，不要爆掉了
+    device = torch.device("cpu")
 
     # os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu_
     args.device = device
@@ -327,10 +328,8 @@ def solution():
         label_map = {i : label for i, label in enumerate(label_list)}
 
         tokenizer = BertTokenizer.from_pretrained(args.output_dir, do_lower_case=args.do_lower_case)
-        args = torch.load(os.path.join(args.output_dir, 'training_args.bin'))
-        model = BERT_BiLSTM_CRF.from_pretrained(args.output_dir, need_birnn=args.need_birnn, rnn_dim=args.rnn_dim) #使用刚训练好的模型测试
-        # model = BERT_BiLSTM_CRF.from_pretrained(args.model_name_or_path, config=config, need_birnn=args.need_birnn, rnn_dim=args.rnn_dim) #使用原始bert模型测试
-
+        args = torch.load(os.path.join(args.output_dir, 'training_args.bin')) # 加载训练模型
+        model = BERT_BiLSTM_CRF.from_pretrained(args.output_dir, need_birnn=args.need_birnn, rnn_dim=args.rnn_dim)
         model.to(device)
 
         test_examples, test_features, test_data = get_Dataset(args, processor, tokenizer, mode="test")
@@ -342,9 +341,7 @@ def solution():
         all_ori_tokens = [f.ori_tokens for f in test_features]
         all_ori_labels = [e.label.split(" ") for e in test_examples]
 
-        
         test_sampler = SequentialSampler(test_data)
-        # test_dataloader = DataLoader(test_data, sampler=test_sampler, batch_size=args.eval_batch_size)
         test_dataloader = DataLoader(test_data, sampler=test_sampler, batch_size=args.eval_batch_size)
         
         model.eval()
@@ -364,7 +361,6 @@ def solution():
             # logits = logits.detach().cpu().numpy()
 
             for l in logits:
-
                 pred_label = []
                 for idx in l:
                     pred_label.append(id2label[idx])
