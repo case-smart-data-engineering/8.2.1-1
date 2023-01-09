@@ -97,11 +97,10 @@ def solution():
     parser = argparse.ArgumentParser()
 
     ## Required parameters
-    base_path = './1_算法示例'
-    parser.add_argument("--train_file", default=base_path +'/data/clue/train.txt', type=str)
-    parser.add_argument("--eval_file", default=base_path +'/data/clue/eval.txt', type=str)
-    parser.add_argument("--test_file", default=base_path +'/data/clue/test.txt', type=str)
-    parser.add_argument("--model_name_or_path", default=base_path+'/pretrained_bert_model/bert-base-chinese', type=str)
+    parser.add_argument("--train_file", default='./1_算法示例/data/clue/train.txt', type=str)
+    parser.add_argument("--eval_file", default='./1_算法示例/data/clue/eval.txt', type=str)
+    parser.add_argument("--test_file", default='./1_算法示例/data/clue/test.txt', type=str)
+    parser.add_argument("--model_name_or_path", default='./1_算法示例/pretrained_bert_model/bert-base-chinese', type=str)
     parser.add_argument("--output_dir", default='./1_算法示例/model/clue_bilstm/', type=str)
 
     ## other parameters
@@ -113,13 +112,13 @@ def solution():
                         help="Where do you want to store the pre-trained models downloaded from s3")
     
     parser.add_argument("--max_seq_length", default=256, type=int)
-    parser.add_argument("--do_train", default=True, type=boolean_string)
-    parser.add_argument("--do_eval", default=True, type=boolean_string)
+    parser.add_argument("--do_train", default=False, type=boolean_string)
+    parser.add_argument("--do_eval", default=False, type=boolean_string)
     parser.add_argument("--do_test", default=True, type=boolean_string)
     parser.add_argument("--train_batch_size", default=8, type=int)
     parser.add_argument("--eval_batch_size", default=8, type=int)
     parser.add_argument("--learning_rate", default=3e-5, type=float)
-    parser.add_argument("--num_train_epochs", default=3, type=float) # 可修改
+    parser.add_argument("--num_train_epochs", default=10, type=float) # 可修改
     parser.add_argument("--warmup_proprotion", default=0.1, type=float)
     parser.add_argument("--use_weight", default=1, type=int)
     parser.add_argument("--local_rank", type=int, default=-1)
@@ -220,8 +219,7 @@ def solution():
 
         model = BERT_BiLSTM_CRF.from_pretrained(args.model_name_or_path, config=config, 
                 need_birnn=args.need_birnn, rnn_dim=args.rnn_dim)
-        
-        # model = BertModel.from_pretrained('path/to/your/directory')
+    
 
         model.to(device)
         
@@ -327,6 +325,7 @@ def solution():
         # model.to(device)
         label_map = {i : label for i, label in enumerate(label_list)}
 
+        # src = './1_算法示例/model/clue_bilstm/'
         tokenizer = BertTokenizer.from_pretrained(args.output_dir, do_lower_case=args.do_lower_case)
         args = torch.load(os.path.join(args.output_dir, 'training_args.bin')) # 加载训练模型
         model = BERT_BiLSTM_CRF.from_pretrained(args.output_dir, need_birnn=args.need_birnn, rnn_dim=args.rnn_dim)

@@ -134,3 +134,5 @@ dmypy.json
 # vscode
 .vscode/
 1_算法示例/model/clue_bilstm/pytorch_model.bin
+1_算法示例/model/clue_bilstm/eval/
+1_算法示例/pretrained_bert_model/

@@ -12,15 +12,14 @@
 
 
 ### 模型下载之后
-1. 把solution文件中base_path的修改成本地路径
-2. 先运行do_trian之后会生成模型bin文件，之后再进行验证和测试
-3. 对于大模型网络的运行，建议下载到本地进行
-4. 把下载的bert-base-chinese放在pretrained_bert_model文件夹下面
-5. 把完整的数据集放在data\clue下面
-6. 把训练的模型参数文件放在model\clue_bilstm下面
-7. requirements.txt中包含的是模型运行环境的详情
-8. bert下载链接：
-9. 数据集下载链接：
+1. 先运行do_trian之后会生成模型bin文件，之后再进行验证和测试
+2. 对于大模型网络的运行，建议下载到本地进行
+3. 把下载的bert-base-chinese放在pretrained_bert_model文件夹下面
+4. 把完整的数据集放在data\clue下面
+5. 把训练的模型参数文件放在model\clue_bilstm下面
+6. requirements.txt中包含的是模型运行环境的详情
+7. bert下载链接：
+8. 数据集下载链接：
 
 
 
