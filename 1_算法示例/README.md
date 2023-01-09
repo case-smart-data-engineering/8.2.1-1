@@ -19,8 +19,7 @@
 5. 把训练的模型参数文件放在model\clue_bilstm下面
 6. requirements.txt中包含的是模型运行环境的详情
 7. bert下载链接：
-8. 数据集下载链接：
-
+8. 训练的模型文件下载链接：https://github.com/KaiserLord/bigFiles/tree/master/model/clue_bilstm
 
 
 ### 运行的环境
