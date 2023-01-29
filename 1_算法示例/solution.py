@@ -28,7 +28,6 @@ from pytorch_transformers import (WEIGHTS_NAME, BertConfig, BertTokenizer)
 from pytorch_transformers import AdamW, WarmupLinearSchedule
 
 logger = logging.getLogger(__name__)
-os.environ["CURL_CA_BUNDLE"]=""
 
 # set the random seed for repeat
 def set_seed(args):
@@ -93,15 +92,47 @@ def evaluate(args, data, model, id2label, all_ori_tokens):
     return overall, by_type
 
 
-def solution():
+def get_entities(pred_ner, text):
+    token_types = [[] for _ in range(len(pred_ner))]
+    entities = [[] for _ in range(len(pred_ner))]
+    for i in range(len(pred_ner)):
+        token_type = []
+        entity = []
+        j = 0
+        word_begin = False
+        while j < len(pred_ner[i]):
+            if pred_ner[i][j][0] == 'B':
+                if word_begin:
+                    token_type = []  # 防止多个B出现在一起
+                    entity = []
+                token_type.append(pred_ner[i][j])
+                entity.append(text[i][j])
+                word_begin = True
+            elif pred_ner[i][j][0] == 'I':
+                if word_begin:
+                    token_type.append(pred_ner[i][j])
+                    entity.append(text[i][j])
+            else:
+                if word_begin:
+                    token_types[i].append(''.join(token_type))
+                    token_type = []
+                    entities[i].append(''.join(entity))
+                    entity = []
+                word_begin = False
+            j += 1
+    return token_types, entities
+
+
+
+def main():
     parser = argparse.ArgumentParser()
 
     ## Required parameters
-    parser.add_argument("--train_file", default='./1_算法示例/data/clue/train.txt', type=str)
-    parser.add_argument("--eval_file", default='./1_算法示例/data/clue/eval.txt', type=str)
-    parser.add_argument("--test_file", default='./1_算法示例/data/clue/test.txt', type=str)
-    parser.add_argument("--model_name_or_path", default='./1_算法示例/pretrained_bert_model/bert-base-chinese', type=str)
-    parser.add_argument("--output_dir", default='./1_算法示例/model/clue_bilstm/', type=str)
+    parser.add_argument("--train_file", default='D:/GitHub/8.2.1-1/1_算法示例/data/train.txt', type=str)
+    parser.add_argument("--eval_file", default='D:/GitHub/8.2.1-1/1_算法示例/data/dev.txt', type=str)
+    parser.add_argument("--test_file", default='D:/GitHub/8.2.1-1/1_算法示例/data/test.txt', type=str)
+    parser.add_argument("--model_name_or_path", default='bert-base-chinese', type=str)
+    parser.add_argument("--output_dir", default='D:/GitHub/8.2.1-1/1_算法示例/model', type=str)
 
     ## other parameters
     parser.add_argument("--config_name", default="", type=str,
@@ -118,11 +149,11 @@ def solution():
     parser.add_argument("--train_batch_size", default=8, type=int)
     parser.add_argument("--eval_batch_size", default=8, type=int)
     parser.add_argument("--learning_rate", default=3e-5, type=float)
-    parser.add_argument("--num_train_epochs", default=10, type=float) # 可修改
+    parser.add_argument("--num_train_epochs", default=10, type=float)
     parser.add_argument("--warmup_proprotion", default=0.1, type=float)
     parser.add_argument("--use_weight", default=1, type=int)
     parser.add_argument("--local_rank", type=int, default=-1)
-    parser.add_argument("--seed", type=int, default=2019)
+    parser.add_argument("--seed", type=int, default=2023)
     parser.add_argument("--fp16", default=False)
     parser.add_argument("--loss_scale", type=float, default=0)
     parser.add_argument('--gradient_accumulation_steps', type=int, default=1)
@@ -130,22 +161,16 @@ def solution():
     parser.add_argument("--adam_epsilon", default=1e-8, type=float)
     parser.add_argument("--max_steps", default=-1, type=int)
     parser.add_argument("--do_lower_case", action='store_true')
-    parser.add_argument("--logging_steps", default=100, type=int) # 可修改
-    # parser.add_argument("--logging_steps", default=100, type=int)
+    parser.add_argument("--logging_steps", default=500, type=int)
     parser.add_argument("--clean", default=False, type=boolean_string, help="clean the output dir")
 
-    parser.add_argument("--need_birnn", default=True, type=boolean_string)
+    parser.add_argument("--need_birnn", default=False, type=boolean_string)
     parser.add_argument("--rnn_dim", default=128, type=int)
 
     args = parser.parse_args()
 
-    # if torch.cuda.is_available():
-    #     device = torch.device("cuda")
-    # else:
-    #     device = torch.device("cpu")
-    # 若使用gpu，注意gpu显存大小，不要爆掉了
+    # device = torch.device("cuda")
     device = torch.device("cpu")
-
     # os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu_
     args.device = device
     n_gpu = torch.cuda.device_count()
@@ -160,8 +185,11 @@ def solution():
         raise ValueError("Invalid gradient_accumulation_steps parameter: {}, should be >= 1".format(
                             args.gradient_accumulation_steps))
 
-
-
+    # now_time = datetime.datetime.now().strftime('%Y-%m-%d_%H')
+    # tmp_dir = args.output_dir + '/' +str(now_time) + '_ernie'
+    # if not os.path.exists(tmp_dir):
+    #     os.makedirs(tmp_dir)
+    # args.output_dir = tmp_dir
     if args.clean and args.do_train:
         # logger.info("清理")
         if os.path.exists(args.output_dir):
@@ -176,14 +204,14 @@ def solution():
                     else:
                         os.remove(c_path)
             try:
-                del_file(args.output_dir) # 获取目录下所有文件信息
+                del_file(args.output_dir)
             except Exception as e:
                 print(e)
                 print('pleace remove the files of output dir and data.conf')
                 exit(-1)
     
-    # if os.path.exists(args.output_dir) and os.listdir(args.output_dir) and args.do_train:
-    #     raise ValueError("Output directory ({}) already exists and is not empty.".format(args.output_dir))
+    if os.path.exists(args.output_dir) and os.listdir(args.output_dir) and args.do_train:
+        raise ValueError("Output directory ({}) already exists and is not empty.".format(args.output_dir))
     if not os.path.exists(args.output_dir):
         os.makedirs(args.output_dir)
 
@@ -213,13 +241,10 @@ def solution():
 
         tokenizer = BertTokenizer.from_pretrained(args.tokenizer_name if args.tokenizer_name else args.model_name_or_path, 
                     do_lower_case=args.do_lower_case)
-
         config = BertConfig.from_pretrained(args.config_name if args.config_name else args.model_name_or_path, 
                 num_labels=num_labels)
-
         model = BERT_BiLSTM_CRF.from_pretrained(args.model_name_or_path, config=config, 
                 need_birnn=args.need_birnn, rnn_dim=args.rnn_dim)
-    
 
         model.to(device)
         
@@ -257,10 +282,8 @@ def solution():
         global_step = 0
         tr_loss, logging_loss = 0.0, 0.0
         best_f1 = 0.0
-        
         for ep in trange(int(args.num_train_epochs), desc="Epoch"):
             model.train()
-
             for step, batch in enumerate(tqdm(train_dataloader, desc="Iteration")):
                 batch = tuple(t.to(device) for t in batch)
                 input_ids, input_mask, segment_ids, label_ids = batch
@@ -284,9 +307,7 @@ def solution():
                         tr_loss_avg = (tr_loss-logging_loss)/args.logging_steps
                         writer.add_scalar("Train/loss", tr_loss_avg, global_step)
                         logging_loss = tr_loss
-                    
-
-            print('do_eval')
+            
             if args.do_eval:
                 all_ori_tokens_eval = [f.ori_tokens for f in eval_features]
                 overall, by_type = evaluate(args, eval_data, model, id2label, all_ori_tokens_eval)
@@ -325,9 +346,8 @@ def solution():
         # model.to(device)
         label_map = {i : label for i, label in enumerate(label_list)}
 
-        # src = './1_算法示例/model/clue_bilstm/'
         tokenizer = BertTokenizer.from_pretrained(args.output_dir, do_lower_case=args.do_lower_case)
-        args = torch.load(os.path.join(args.output_dir, 'training_args.bin')) # 加载训练模型
+        args = torch.load(os.path.join(args.output_dir, 'training_args.bin'))
         model = BERT_BiLSTM_CRF.from_pretrained(args.output_dir, need_birnn=args.need_birnn, rnn_dim=args.rnn_dim)
         model.to(device)
 
@@ -339,10 +359,8 @@ def solution():
 
         all_ori_tokens = [f.ori_tokens for f in test_features]
         all_ori_labels = [e.label.split(" ") for e in test_examples]
-
         test_sampler = SequentialSampler(test_data)
         test_dataloader = DataLoader(test_data, sampler=test_sampler, batch_size=args.eval_batch_size)
-        
         model.eval()
 
         pred_labels = []
@@ -360,21 +378,29 @@ def solution():
             # logits = logits.detach().cpu().numpy()
 
             for l in logits:
+
                 pred_label = []
                 for idx in l:
                     pred_label.append(id2label[idx])
                 pred_labels.append(pred_label)
 
         assert len(pred_labels) == len(all_ori_tokens) == len(all_ori_labels)
-        # print(len(pred_labels)) # 1000
+        print(len(pred_labels))
         with open(os.path.join(args.output_dir, "token_labels_.txt"), "w", encoding="utf-8") as f:
             for ori_tokens, ori_labels,prel in zip(all_ori_tokens, all_ori_labels, pred_labels):
                 for ot,ol,pl in zip(ori_tokens, ori_labels, prel):
                     if ot in ["[CLS]", "[SEP]"]:
                         continue
                     else:
-                        f.write(f"{ot} {ol} {pl}\n")
+                        # f.write(f"{ot} {ol} {pl}\n")
+                        f.write(f"{ot} {pl}\n")
                 f.write("\n")
 
+        token_types, entities = get_entities(pred_labels, all_ori_tokens)
+        # print(token_types)
+        print('识别出来的实体如下:')
+        print(entities)
+
 if __name__ == "__main__":
-    solution()
+    main()
+    pass

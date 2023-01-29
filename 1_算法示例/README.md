@@ -1,9 +1,8 @@
 # BERT-BiLSTM-CRF模型进行NER命名实体识别
 
 ### 文件清单
-- data\clue：数据集
+- data：数据集
 - model：模型参数、保存训练后的模型、模型输入所需的文件
-- pretrained_bert_model: bert模型存放路径
 - clue_process.py：数据处理文件
 - conlleval.py：模型评估代码
 - models.py：BERT+BiLstm+CRF模型
@@ -15,20 +14,11 @@
 1. 先运行do_trian之后会生成模型bin文件，之后再进行验证和测试
 2. 对于大模型网络的运行，建议下载到本地进行
 3. 把下载的bert-base-chinese放在pretrained_bert_model文件夹下面
-4. 把完整的数据集放在data\clue下面
-5. 把训练的模型参数文件放在model\clue_bilstm下面
-6. requirements.txt中包含的是模型运行环境的详情
-7. bert下载链接：
-8. 训练的模型文件下载链接：https://github.com/KaiserLord/bigFiles/tree/master/model/clue_bilstm
+4. 把训练的模型参数文件放在model下面
+5. requirements.txt中包含的是模型运行环境的详情
+6. bert下载链接：
+7. 训练的模型文件下载链接：https://github.com/KaiserLord/bigFiles/tree/master/model/clue_bilstm
 
-
-### 运行的环境
-```
-python == 3.7.4
-pytorch == 1.3.1 
-pytorch-crf == 0.7.2  
-pytorch-transformers == 1.2.0       
-```
 
 ### 数据处理
 
@@ -61,7 +51,7 @@ pytorch-transformers == 1.2.0
 终	O
 于	O
 ```
-预测结果保存在model\clue_bilstm\token_labels_.txt中，第一列为输入的BIO格式，第二列是预测的实体类型
+预测结果保存在modeltoken_labels_.txt中，第一列为输入的BIO格式，第二列是预测的实体类型
         
 
 ### 使用方法

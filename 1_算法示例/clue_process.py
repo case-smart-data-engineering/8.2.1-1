@@ -1,6 +1,4 @@
 import json
-import sys
-import os
 
 def _read_json(input_file, mode="train"):
     lines = []
@@ -23,8 +21,7 @@ def _read_json(input_file, mode="train"):
                                 labels[start_index+1:end_index+1] = ['I-'+key]*(len(sub_name)-1)
             lines.append({"words": words, "labels": labels})
     
-
-    with open(f"./1_算法示例/data/clue/{mode}.txt", "w", encoding='utf-8') as f:
+    with open(f"./1_算法示例/data/{mode}.txt", "w") as f:
         for line in lines:
             for w, l in zip(line["words"], line["labels"]):
                 f.write(f"{w}\t{l}\n")
@@ -68,15 +65,64 @@ def get_entity_bio(seq):
             if chunk[2] != -1:
                 chunks.append(chunk)
             chunk = [-1, -1, -1]
-
     return chunks
 
 if __name__ == "__main__":
-    file_path = './1_算法示例/data/clue'
-    train_file = file_path+'/train.json'
-    eval_file = file_path+'/eval.json'
-    test_file = file_path+'/test.json'
+    _read_json("./1_算法示例/data/train.json", "train")
+    _read_json("./1_算法示例/data/dev.json", "dev")
+    _read_json("./1_算法示例/data/test.json", "test")
 
-    _read_json(train_file, "train")
-    _read_json(eval_file, "eval")
-    _read_json(test_file, "test")
+    # with open("./model/clue/token_labels_.txt") as f:
+    #     lines = [line.strip().split(" ") for line in f.readlines()]
+    
+    # label_seq = []
+    # token_seq = []
+
+    # texts = []
+    # labels = []  
+
+    # for id_, line in enumerate(lines):
+
+    #     if len(line) == 3:
+    #         token_seq.append(line[0])
+    #         label_seq.append(line[2])
+    
+    #     if len(line) != 3:
+    #         texts.append(token_seq)
+    #         labels.append(label_seq)
+
+    #         token_seq = []
+    #         label_seq = []
+
+    # if token_seq:
+    #     texts.append(token_seq)
+    #     labels.append(label_seq)
+
+    # test_submit = []
+    # for id_, (token_seq, label_seq) in enumerate(zip(texts, labels)):
+    #     json_d = {}
+    #     json_d['id'] = str(id_)
+    #     json_d['label'] = {}
+
+    #     chunks = get_entity_bio(label_seq)
+
+    #     if len(chunks) != 0:
+    #         for subject in chunks:
+    #             tag = subject[0]
+    #             start = subject[1]
+    #             end = subject[2]
+    #             word = "".join(token_seq[start:end + 1])
+    #             if tag in json_d['label']:
+    #                 if word in json_d['label'][tag]:
+    #                     json_d['label'][tag][word].append([start, end])
+    #                 else:
+    #                     json_d['label'][tag][word] = [[start, end]]
+    #             else:
+    #                 json_d['label'][tag] = {}
+    #                 json_d['label'][tag][word] = [[start, end]]
+    #     test_submit.append(json_d)
+    
+    # with open("./model/clue/submit.json", "w") as f:
+    #     for line in test_submit:
+    #         f.write(json.dumps(line, ensure_ascii=False)+"\n")
+    

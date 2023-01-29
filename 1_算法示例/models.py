@@ -49,3 +49,4 @@ class BERT_BiLSTM_CRF(BertPreTrainedModel):
     def predict(self, input_ids, token_type_ids=None, input_mask=None):
         emissions = self.tag_outputs(input_ids, token_type_ids, input_mask)
         return self.crf.decode(emissions, input_mask.byte())
+
