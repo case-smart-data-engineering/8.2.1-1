@@ -135,5 +135,9 @@ dmypy.json
 .vscode/
 __pycache__/
 .pytest_cache/
-*/model/*
-
+*/model/eval/
+*/model/*.json
+*/model/*.pkl
+*/model/*.txt
+*/model/*.bin
+# model中只留下readme
