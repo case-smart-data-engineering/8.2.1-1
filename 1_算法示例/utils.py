@@ -33,7 +33,7 @@ class InputFeatures(object):
 class NerProcessor(object):
     def read_data(self, input_file):
         """Reads a BIO data."""
-        with open(input_file, "r", encoding="gbk") as f:
+        with open(input_file, "r", encoding="utf-8") as f:
             lines = []
             words = []
             labels = []
@@ -203,11 +203,11 @@ def get_Dataset(args, processor, tokenizer, mode="train"):
     
     if mode == "train":
         # filepath = args.train_file
-        filepath = 'D:/GitHub/8.2.1-1/1_算法示例/data/train.txt'
+        filepath = '/workspace/8.2.1-1/1_算法示例/data/train.txt'
     elif mode == "eval":
-        filepath = 'D:/GitHub/8.2.1-1/1_算法示例/data/dev.txt'
+        filepath = '/workspace/8.2.1-1/1_算法示例/data/dev.txt'
     elif mode == "test":
-        filepath = 'D:/GitHub/8.2.1-1/1_算法示例/data/test.txt'
+        filepath = '/workspace/8.2.1-1/1_算法示例/data/test.txt'
     else:
         raise ValueError("mode must be one of train, eval, or test")
 
