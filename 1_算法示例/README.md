@@ -16,8 +16,8 @@
 3. 把下载的bert-base-chinese放在pretrained_bert_model文件夹下面
 4. 把训练的模型参数文件放在model下面
 5. requirements.txt中包含的是模型运行环境的详情
-6. bert下载链接：
-7. 训练的模型文件下载链接：https://github.com/KaiserLord/bigFiles/tree/master/model/clue_bilstm
+6. bert-base-chinese下载链接：https://huggingface.co/bert-base-chinese/tree/main ，下载config.json、vocab.txt和bin文件即可
+7. 训练的模型文件下载链接：https://github.com/KaiserLord/bigFiles/tree/master/model/，下载后放在model目录下
 
 
 ### 数据处理
