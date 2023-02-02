@@ -20,7 +20,7 @@ from torch.utils.data.distributed import DistributedSampler
 from tqdm import tqdm, trange
 from tensorboardX import SummaryWriter
 
-sys.path.append('D:/GitHub/8.2.1-1/1_算法示例/')
+sys.path.append('/workspace/8.2.1-1/1_算法示例')
 from utils import NerProcessor, convert_examples_to_features, get_Dataset
 from models import BERT_BiLSTM_CRF
 import conlleval
@@ -82,11 +82,11 @@ def test():
     parser = argparse.ArgumentParser()
 
     ## Required parameters
-    parser.add_argument("--train_file", default='D:/GitHub/8.2.1-1/1_算法示例/data/train.txt', type=str)
-    parser.add_argument("--eval_file", default='D:/GitHub/8.2.1-1/1_算法示例/data/dev.txt', type=str)
-    parser.add_argument("--test_file", default='D:/GitHub/8.2.1-1/1_算法示例/data/test.txt', type=str)
+    parser.add_argument("--train_file", default='/workspace/8.2.1-1/1_算法示例/data/train.txt', type=str)
+    parser.add_argument("--eval_file", default='/workspace/8.2.1-1/1_算法示例/data/dev.txt', type=str)
+    parser.add_argument("--test_file", default='/workspace/8.2.1-1/1_算法示例/data/test.txt', type=str)
     parser.add_argument("--model_name_or_path", default='bert-base-chinese', type=str)
-    parser.add_argument("--output_dir", default='D:/GitHub/8.2.1-1/1_算法示例/model', type=str)
+    parser.add_argument("--output_dir", default='/workspace/8.2.1-1/1_算法示例/model', type=str)
 
     ## other parameters
     parser.add_argument("--config_name", default="", type=str,
@@ -188,8 +188,8 @@ def test():
 
     tokenizer = BertTokenizer.from_pretrained(args.output_dir, do_lower_case=args.do_lower_case)
     # args = torch.load(os.path.join(args.output_dir, 'training_args.bin'))
-    args = torch.load(os.path.join(r'D:\GitHub\8.2.1-1\1_算法示例\model', 'training_args.bin'))
-    model = BERT_BiLSTM_CRF.from_pretrained(r'D:\GitHub\8.2.1-1\1_算法示例\model', need_birnn=args.need_birnn, rnn_dim=args.rnn_dim)
+    args = torch.load(os.path.join(r'/workspace/8.2.1-1/1_算法示例/model', 'training_args.bin'))
+    model = BERT_BiLSTM_CRF.from_pretrained(r'/workspace/8.2.1-1/1_算法示例/model', need_birnn=args.need_birnn, rnn_dim=args.rnn_dim)
     model.to(device)
 
     # 补全1
@@ -230,7 +230,7 @@ def test():
 
     assert len(pred_labels) == len(all_ori_tokens) == len(all_ori_labels)
     print(len(pred_labels))
-    with open('D:/GitHub/8.2.1-1/1_算法示例/model'+'/'+"token_labels_.txt", "w", encoding="utf-8") as f:
+    with open('/workspace/8.2.1-1/1_算法示例/model'+'/'+"token_labels_.txt", "w", encoding="utf-8") as f:
         for ori_tokens, ori_labels,prel in zip(all_ori_tokens, all_ori_labels, pred_labels):
             for ot,ol,pl in zip(ori_tokens, ori_labels, prel):
                 if ot in ["[CLS]", "[SEP]"]:
