@@ -193,8 +193,8 @@ def test():
     model.to(device)
 
     # 补全1
-    # test_examples, test_features, test_data = get_Dataset(args, processor, tokenizer, mode="test")
-    raise NotImplementedError('补全输入方式')
+    test_examples, test_features, test_data = get_Dataset(args, processor, tokenizer, mode="test")
+    # raise NotImplementedError('补全输入方式')
 
 
     logger.info("***** Running test *****")
@@ -239,8 +239,8 @@ def test():
                     f.write(f"{ot} {pl}\n")
             f.write("\n")
     # 补全2
-    # token_types, entities = get_entities(pred_labels, all_ori_tokens)
-    raise NotImplementedError('补全输入方式')
+    token_types, entities = get_entities(pred_labels, all_ori_tokens)
+    # raise NotImplementedError('补全输入方式')
     
     return entities
 
