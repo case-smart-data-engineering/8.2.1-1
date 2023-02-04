@@ -136,8 +136,5 @@ dmypy.json
 __pycache__/
 .pytest_cache/
 */model/eval/
-*/model/*.json
-*/model/*.pkl
-*/model/*.txt
 */model/pytorch_model.bin
 # model中只留下readme
