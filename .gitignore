@@ -137,4 +137,3 @@ __pycache__/
 .pytest_cache/
 */model/eval/
 */model/pytorch_model.bin
-# model中只留下readme
