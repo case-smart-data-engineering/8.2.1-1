@@ -128,11 +128,11 @@ def main():
     parser = argparse.ArgumentParser()
 
     ## Required parameters
-    parser.add_argument("--train_file", default='D:/GitHub/8.2.1-1/1_算法示例/data/train.txt', type=str)
-    parser.add_argument("--eval_file", default='D:/GitHub/8.2.1-1/1_算法示例/data/dev.txt', type=str)
-    parser.add_argument("--test_file", default='D:/GitHub/8.2.1-1/1_算法示例/data/test.txt', type=str)
+    parser.add_argument("--train_file", default='/workspace/8.2.1-1/1_算法示例/data/train.txt', type=str)
+    parser.add_argument("--eval_file", default='/workspace/8.2.1-1/1_算法示例/data/dev.txt', type=str)
+    parser.add_argument("--test_file", default='/workspace/8.2.1-1/1_算法示例/data/test.txt', type=str)
     parser.add_argument("--model_name_or_path", default='bert-base-chinese', type=str)
-    parser.add_argument("--output_dir", default='D:/GitHub/8.2.1-1/1_算法示例/model', type=str)
+    parser.add_argument("--output_dir", default='/workspace/8.2.1-1/1_算法示例/model', type=str)
 
     ## other parameters
     parser.add_argument("--config_name", default="", type=str,
@@ -347,8 +347,8 @@ def main():
         label_map = {i : label for i, label in enumerate(label_list)}
 
         tokenizer = BertTokenizer.from_pretrained(args.output_dir, do_lower_case=args.do_lower_case)
-        args = torch.load(os.path.join(args.output_dir, 'training_args.bin'))
-        model = BERT_BiLSTM_CRF.from_pretrained(args.output_dir, need_birnn=args.need_birnn, rnn_dim=args.rnn_dim)
+        args = torch.load('/workspace/8.2.1-1/1_算法示例/model/training_args.bin')
+        model = BERT_BiLSTM_CRF.from_pretrained('/workspace/8.2.1-1/1_算法示例/model', need_birnn=args.need_birnn, rnn_dim=args.rnn_dim)
         model.to(device)
 
         test_examples, test_features, test_data = get_Dataset(args, processor, tokenizer, mode="test")
@@ -386,7 +386,7 @@ def main():
 
         assert len(pred_labels) == len(all_ori_tokens) == len(all_ori_labels)
         print(len(pred_labels))
-        with open(os.path.join(args.output_dir, "token_labels_.txt"), "w", encoding="utf-8") as f:
+        with open(os.path.join('/workspace/8.2.1-1/1_算法示例/model', "token_labels_.txt"), "w", encoding="utf-8") as f:
             for ori_tokens, ori_labels,prel in zip(all_ori_tokens, all_ori_labels, pred_labels):
                 for ot,ol,pl in zip(ori_tokens, ori_labels, prel):
                     if ot in ["[CLS]", "[SEP]"]:

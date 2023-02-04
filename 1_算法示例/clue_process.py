@@ -21,7 +21,7 @@ def _read_json(input_file, mode="train"):
                                 labels[start_index+1:end_index+1] = ['I-'+key]*(len(sub_name)-1)
             lines.append({"words": words, "labels": labels})
     
-    with open(f"./1_算法示例/data/{mode}.txt", "w") as f:
+    with open(f"/workspace/8.2.1-1/1_算法示例/data/{mode}.txt", "w") as f:
         for line in lines:
             for w, l in zip(line["words"], line["labels"]):
                 f.write(f"{w}\t{l}\n")
@@ -68,9 +68,9 @@ def get_entity_bio(seq):
     return chunks
 
 if __name__ == "__main__":
-    _read_json("./1_算法示例/data/train.json", "train")
-    _read_json("./1_算法示例/data/dev.json", "dev")
-    _read_json("./1_算法示例/data/test.json", "test")
+    _read_json("/workspace/8.2.1-1/1_算法示例/data/train.json", "train")
+    _read_json("/workspace/8.2.1-1/1_算法示例/data/dev.json", "dev")
+    _read_json("/workspace/8.2.1-1/1_算法示例/data/test.json", "test")
 
     # with open("./model/clue/token_labels_.txt") as f:
     #     lines = [line.strip().split(" ") for line in f.readlines()]
