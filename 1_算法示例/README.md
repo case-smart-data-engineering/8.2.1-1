@@ -13,11 +13,8 @@
 ### 模型下载之后
 1. 先运行do_trian之后会生成模型bin文件，之后再进行验证和测试
 2. 对于大模型网络的运行，建议下载到本地进行
-3. 把下载的bert-base-chinese放在pretrained_bert_model文件夹下面
-4. 把训练的模型参数文件放在model下面
-5. requirements.txt中包含的是模型运行环境的详情
-6. bert下载链接：
-7. 训练的模型文件下载链接：https://github.com/KaiserLord/bigFiles/tree/master/model/clue_bilstm
+3. 把训练的模型参数文件放在model下面
+4. 训练的模型文件下载链接：https://github.com/KaiserLord/bigFiles/tree/master/model/
 
 
 ### 数据处理
@@ -56,25 +53,5 @@
 
 ### 使用方法
 ```
-python ner.py \
-    --model_name_or_path ${BERT_BASE_DIR} \
-    --do_train True \
-    --do_eval True \
-    --do_test True \
-    --max_seq_length 256 \
-    --train_file ${DATA_DIR}/train.txt \
-    --eval_file ${DATA_DIR}/dev.txt \
-    --test_file ${DATA_DIR}/test.txt \
-    --train_batch_size 32 \
-    --eval_batch_size 32 \
-    --num_train_epochs 10 \
-    --do_lower_case \
-    --logging_steps 200 \
-    --need_birnn True \
-    --rnn_dim 256 \
-    --clean True \
-    --output_dir $OUTPUT_DIR
+直接运行solution.py即可
 ```
-
-### 在中文CLUENER2020的eval集上的结果
-https://github.com/CLUEbenchmark/CLUENER2020

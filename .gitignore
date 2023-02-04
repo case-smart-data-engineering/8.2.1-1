@@ -139,5 +139,5 @@ __pycache__/
 */model/*.json
 */model/*.pkl
 */model/*.txt
-*/model/*.bin
+*/model/pytorch_model.bin
 # model中只留下readme
