@@ -10,16 +10,15 @@
 - utils.py：工具文件
 
 
-### 模型下载之后
-1. 先运行do_trian之后会生成模型bin文件，之后再进行验证和测试
-2. 对于大模型网络的运行，建议下载到本地进行
-3. 把训练的模型参数文件放在model下面
-4. 训练的模型文件下载链接：https://github.com/KaiserLord/bigFiles/tree/master/model/
+### 运行步骤
+1. 在指定url下载大文件（模型文件）到本地后再执行上传操作。在bert-base-chinese目录下上传pytorch_model.bin文件；在model目录下上传**已训练**的pytorch_model.bin文件，即可直接运行solution.py进行测试。
+2. 如果想要运行train的过程代码，在solution.py文件中把do_train和do_eval设置为True即可。
+3. 已训练的模型文件下载链接：https://github.com/KaiserLord/bigFiles/tree/master/model/
+4. 未训练的模型文件下载链接：https://huggingface.co/bert-base-chinese/tree/main
 
 
 ### 数据处理
-
-运行`clue_process.py`文件对数据集进行处理
+运行`clue_process.py`文件对数据集进行处理(已完成)
 把数据从json文件处理成BIO格式，保存在txt同名文件
 ```
 彭	B-name
@@ -48,10 +47,4 @@
 终	O
 于	O
 ```
-预测结果保存在modeltoken_labels_.txt中，第一列为输入的BIO格式，第二列是预测的实体类型
-        
-
-### 使用方法
-```
-直接运行solution.py即可
-```
+预测结果保存在modeltoken_labels_.txt中。
