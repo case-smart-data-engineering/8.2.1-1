@@ -50,7 +50,7 @@ def evaluate(args, data, model, id2label, all_ori_tokens):
     sampler = SequentialSampler(data)
     dataloader = DataLoader(data, sampler=sampler, batch_size=args.train_batch_size)
 
-    logger.info("***** Running eval *****")
+    # logger.info("***** Running eval *****")
     # logger.info(f" Num examples = {len(data)}")
     # logger.info(f" Batch size = {args.eval_batch_size}")
     pred_labels = []
@@ -175,11 +175,11 @@ def main():
     args.device = device
     n_gpu = torch.cuda.device_count()
 
-    logging.basicConfig(format = '%(asctime)s - %(levelname)s - %(name)s -   %(message)s',
-                        datefmt = '%m/%d/%Y %H:%M:%S',
-                        level = logging.INFO)
+    # logging.basicConfig(format = '%(asctime)s - %(levelname)s - %(name)s -   %(message)s',
+    #                     datefmt = '%m/%d/%Y %H:%M:%S',
+    #                     level = logging.INFO)
 
-    logger.info(f"device: {device} n_gpu: {n_gpu}")
+    # logger.info(f"device: {device} n_gpu: {n_gpu}")
 
     if args.gradient_accumulation_steps < 1:
         raise ValueError("Invalid gradient_accumulation_steps parameter: {}, should be >= 1".format(
@@ -197,7 +197,7 @@ def main():
                 ls = os.listdir(path)
                 for i in ls:
                     c_path = os.path.join(path, i)
-                    print(c_path)
+                    # print(c_path)
                     if os.path.isdir(c_path):
                         del_file(c_path)
                         os.rmdir(c_path)
@@ -273,10 +273,10 @@ def main():
         scheduler = WarmupLinearSchedule(optimizer, warmup_steps=args.warmup_steps, t_total=t_total)
 
         # Train!
-        logger.info("***** Running training *****")
-        logger.info("  Num examples = %d", len(train_data))
-        logger.info("  Num Epochs = %d", args.num_train_epochs)
-        logger.info("  Total optimization steps = %d", t_total)
+        # logger.info("***** Running training *****")
+        # logger.info("  Num examples = %d", len(train_data))
+        # logger.info("  Num Epochs = %d", args.num_train_epochs)
+        # logger.info("  Total optimization steps = %d", t_total)
 
         model.train()
         global_step = 0
@@ -320,7 +320,7 @@ def main():
 
                 # save the best performs model
                 if f1_score > best_f1:
-                    logger.info(f"----------the best f1 is {f1_score}---------")
+                    # logger.info(f"----------the best f1 is {f1_score}---------")
                     best_f1 = f1_score
                     model_to_save = model.module if hasattr(model, 'module') else model  # Take care of distributed/parallel training
                     model_to_save.save_pretrained(args.output_dir)
@@ -352,10 +352,9 @@ def main():
         model.to(device)
 
         test_examples, test_features, test_data = get_Dataset(args, processor, tokenizer, mode="test")
-
-        logger.info("***** Running test *****")
-        logger.info(f" Num examples = {len(test_examples)}")
-        logger.info(f" Batch size = {args.eval_batch_size}")
+        # logger.info("***** Running test *****")
+        # logger.info(f" Num examples = {len(test_examples)}")
+        # logger.info(f" Batch size = {args.eval_batch_size}")
 
         all_ori_tokens = [f.ori_tokens for f in test_features]
         all_ori_labels = [e.label.split(" ") for e in test_examples]
@@ -385,7 +384,7 @@ def main():
                 pred_labels.append(pred_label)
 
         assert len(pred_labels) == len(all_ori_tokens) == len(all_ori_labels)
-        print(len(pred_labels))
+        # print(len(pred_labels))
         with open(os.path.join('/workspace/8.2.1-1/1_算法示例/model', "token_labels_.txt"), "w", encoding="utf-8") as f:
             for ori_tokens, ori_labels,prel in zip(all_ori_tokens, all_ori_labels, pred_labels):
                 for ot,ol,pl in zip(ori_tokens, ori_labels, prel):
@@ -397,7 +396,7 @@ def main():
                 f.write("\n")
 
         token_types, entities = get_entities(pred_labels, all_ori_tokens)
-        # print(token_types)
+        print(test_examples[0].text)
         print('识别出来的实体如下:')
         print(entities)
 

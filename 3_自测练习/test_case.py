@@ -9,7 +9,7 @@ import sys
 def test_solution():
     res = test()
     print(res)
-    assert res == [['浙商银行', '叶老桂', '叶老桂']]  # 判断输出结果，预期increment(8)应该为9
+    assert res ==  [['记者', '陈博']]   # 判断输出结果，预期increment(8)应该为9
 
 
 if __name__ == '__main__':

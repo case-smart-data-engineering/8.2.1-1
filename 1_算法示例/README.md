@@ -11,15 +11,16 @@
 
 
 ### 运行步骤
-1. 在指定url下载大文件（模型文件）到本地后再执行上传操作。在bert-base-chinese目录下上传pytorch_model.bin文件；在model目录下上传**已训练**的pytorch_model.bin文件，即可直接运行solution.py进行测试。
-2. 如果想要运行train的过程代码，在solution.py文件中把do_train和do_eval设置为True即可。
-3. 已训练的模型文件下载链接：https://github.com/KaiserLord/bigFiles/tree/master/model/
-4. 未训练的模型文件下载链接：https://huggingface.co/bert-base-chinese/tree/main
+1. 在指定url（步骤3和步骤4）下载大文件（模型文件）到本地后再执行上传操作，在bert-base-chinese目录下上传pytorch_model.bin文件，在model目录下上传`已训练`的pytorch_model.bin文件，即可直接运行solution.py进行测试。
+2. 已训练的模型文件下载链接：https://github.com/KaiserLord/bigFiles/tree/master/model/ 。
+3. 未训练的模型文件下载链接：https://huggingface.co/bert-base-chinese/tree/main 。
 
+### 训练模型
+1. 删除model目录下的所有文件，并在solution.py中把`do_train`和`do_eval`设置为True。
+2. 在`1_算法示例`下运行：python solution.py 即可进行模型训练。
 
 ### 数据处理
-运行`clue_process.py`文件对数据集进行处理(已完成)
-把数据从json文件处理成BIO格式，保存在txt同名文件
+运行`clue_process.py`文件对数据集进行处理(已完成)，把数据从json文件处理成BIO格式，保存在txt同名文件。
 ```
 彭	B-name
 小	I-name

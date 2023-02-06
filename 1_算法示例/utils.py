@@ -62,12 +62,12 @@ class NerProcessor(object):
     def get_labels(self, args):
         labels = set()
         if os.path.exists(os.path.join(args.output_dir, "label_list.pkl")):
-            logger.info(f"loading labels info from {args.output_dir}")
+            # logger.info(f"loading labels info from {args.output_dir}")
             with open(os.path.join(args.output_dir, "label_list.pkl"), "rb") as f:
                 labels = pickle.load(f)
         else:
             # get labels from train data
-            logger.info(f"loading labels info from train file and dump in {args.output_dir}")
+            # logger.info(f"loading labels info from train file and dump in {args.output_dir}")
             with open(args.train_file) as f:
                 for line in f.readlines():
                     tokens = line.strip().split("\t")
@@ -79,7 +79,7 @@ class NerProcessor(object):
                 with open(os.path.join(args.output_dir, "label_list.pkl"), "wb") as f:
                     pickle.dump(labels, f)
             else:
-                logger.info("loading error and return the default labels B,I,O")
+                # logger.info("loading error and return the default labels B,I,O")
                 labels = {"O", "B", "I"}
         
         return labels 
@@ -175,15 +175,15 @@ def convert_examples_to_features(args, examples, label_list, max_seq_length, tok
         assert len(segment_ids) == max_seq_length
         assert len(label_ids) == max_seq_length
 
-        if ex_index < 5:
-            logger.info("*** Example ***")
-            logger.info("guid: %s" % (example.guid))
-            logger.info("tokens: %s" % " ".join(
-                [str(x) for x in ntokens]))
-            logger.info("input_ids: %s" % " ".join([str(x) for x in input_ids]))
-            logger.info("input_mask: %s" % " ".join([str(x) for x in input_mask]))
-            logger.info("segment_ids: %s" % " ".join([str(x) for x in segment_ids]))
-            logger.info("label_ids: %s" % " ".join([str(x) for x in label_ids]))
+        # if ex_index < 5:
+            # logger.info("*** Example ***")
+            # logger.info("guid: %s" % (example.guid))
+            # logger.info("tokens: %s" % " ".join(
+            #     [str(x) for x in ntokens]))
+            # logger.info("input_ids: %s" % " ".join([str(x) for x in input_ids]))
+            # logger.info("input_mask: %s" % " ".join([str(x) for x in input_mask]))
+            # logger.info("segment_ids: %s" % " ".join([str(x) for x in segment_ids]))
+            # logger.info("label_ids: %s" % " ".join([str(x) for x in label_ids]))
 
         # if not os.path.exists(os.path.join(output_dir, 'label2id.pkl')):
         #     with open(os.path.join(output_dir, 'label2id.pkl'), 'wb') as w:

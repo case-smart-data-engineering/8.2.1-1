@@ -137,3 +137,4 @@ __pycache__/
 .pytest_cache/
 */model/eval/
 */model/pytorch_model.bin
+*/bert-base-chinese/*.bin
